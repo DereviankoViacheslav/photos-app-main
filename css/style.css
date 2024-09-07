@@ -238,8 +238,8 @@ main {
   display: grid;
   grid-gap: 10px;
 
-  -ms-grid-columns: (1fr)[7];
-      grid-template-columns: repeat(7, 1fr);
+  /* -ms-grid-columns: (1fr)[7]; */
+  grid-template-columns: repeat(7, 1fr);
 }
 .pictures::before, .pictures::after {
   content: '';
@@ -1363,7 +1363,7 @@ main {
   }
 
   .pictures {
-    -ms-grid-columns: (1fr)[5];
+    /* -ms-grid-columns: (1fr)[5]; */
     grid-template-columns: repeat(5, 1fr);
   }
 
@@ -1384,7 +1384,7 @@ main {
   }
 
   .pictures {
-    -ms-grid-columns: (1fr)[3];
+    /* -ms-grid-columns: (1fr)[3]; */
     grid-template-columns: repeat(3, 1fr);
   }
 

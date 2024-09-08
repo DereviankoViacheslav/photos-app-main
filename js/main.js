@@ -1,14 +1,23 @@
-const postCount = 25;
-const posts = Array(postCount);
+import { addPostsOnPage } from "./getPostElements.js";
+
+const POST_COUNT = 25;
+const posts = Array(POST_COUNT);
 
 function getRandomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 function createComment(id) {
-  const names = ["Jon", "Bob", "Anna"];
+  const names = ["Аня", "Коля", "Петя", "Вася", "Артём","Витя","Женя","Гена"];
   const name = names[getRandomIntFromInterval(0, names.length - 1)];
-  const messages = ["OK", "Bad", "Normal"];
+  const messages = [
+    "Все отлично!",
+    "В общем все неплохо. Но не все.",
+    "Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов, это просто непрофессионально.",
+    "Моя бабушка случайно чихнула с фотоаппаратом в руках и у нее получилась фотография лучше.",
+    "Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.",
+    "Лица людей на фотке перекошены, будто их избивают. Как можно было поймать такой неудачный момент?",
+  ];
   const message = messages[getRandomIntFromInterval(0, messages.length - 1)];
 
   return {
@@ -21,7 +30,7 @@ function createComment(id) {
 
 let commentIds = 0;
 for (let i = 0; i < posts.length; i++) {
-  const comments = Array(getRandomIntFromInterval(3, 10));
+  const comments = Array(getRandomIntFromInterval(2, 6));
 
   for (let j = 0; j < comments.length; j++) {
     comments[j] = createComment(commentIds++);
@@ -35,3 +44,5 @@ for (let i = 0; i < posts.length; i++) {
     comments,
   };
 }
+
+addPostsOnPage(posts);

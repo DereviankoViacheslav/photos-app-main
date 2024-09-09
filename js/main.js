@@ -1,14 +1,21 @@
-import { addPostsOnPage } from "./getPostElements.js";
-
-const POST_COUNT = 25;
-const posts = Array(POST_COUNT);
+const PICTURE_COUNT = 25;
+const pictureList = Array(PICTURE_COUNT);
 
 function getRandomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 function createComment(id) {
-  const names = ["Аня", "Коля", "Петя", "Вася", "Артём","Витя","Женя","Гена"];
+  const names = [
+    "Аня",
+    "Коля",
+    "Петя",
+    "Вася",
+    "Артём",
+    "Витя",
+    "Женя",
+    "Гена",
+  ];
   const name = names[getRandomIntFromInterval(0, names.length - 1)];
   const messages = [
     "Все отлично!",
@@ -29,14 +36,14 @@ function createComment(id) {
 }
 
 let commentIds = 0;
-for (let i = 0; i < posts.length; i++) {
-  const comments = Array(getRandomIntFromInterval(2, 6));
+for (let i = 0; i < pictureList.length; i++) {
+  const comments = Array(getRandomIntFromInterval(2, 20));
 
   for (let j = 0; j < comments.length; j++) {
     comments[j] = createComment(commentIds++);
   }
 
-  posts[i] = {
+  pictureList[i] = {
     id: i + 1,
     url: `photos/${i + 1}.jpg`,
     decription: `some random decription ${i + 1}`,
@@ -45,4 +52,4 @@ for (let i = 0; i < posts.length; i++) {
   };
 }
 
-addPostsOnPage(posts);
+export { pictureList };

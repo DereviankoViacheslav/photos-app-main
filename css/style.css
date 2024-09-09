@@ -868,7 +868,6 @@ main {
 
 .social__picture {
   display: block;
-  align-self: flex-start;
   -ms-flex-negative: 0;
         flex-shrink: 0;
   margin-right: 15px;
@@ -944,7 +943,6 @@ main {
 .social__author {
   font-weight: bold;
   margin: 0 0 2px;
-  line-height: 12px;
 }
 .social__comment {
   padding-left: 15px;
@@ -988,7 +986,6 @@ main {
 
 .social__text {
   margin: 0;
-  line-height: 12px;
 }
 
 

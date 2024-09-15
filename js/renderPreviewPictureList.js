@@ -1,4 +1,3 @@
-import { pictureList } from "./main.js";
 import { renderBigPicture } from "./renderBigPicture.js";
 
 function openBigPictureModal(event, picture) {
@@ -41,5 +40,3 @@ export function addPictureListOnPage(pictureList) {
   const pictures = document.querySelector(".pictures");
   pictures.append(...pictureElementList);
 }
-
-addPictureListOnPage(pictureList);

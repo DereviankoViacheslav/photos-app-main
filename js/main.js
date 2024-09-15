@@ -1,4 +1,7 @@
-const PICTURE_COUNT = 25;
+import { addPictureListOnPage } from "./renderPreviewPictureList.js";
+import * as test from "./uploadImgHandler.js";
+
+const PICTURE_COUNT = 28;
 const pictureList = Array(PICTURE_COUNT);
 
 function getRandomIntFromInterval(min, max) {
@@ -52,4 +55,4 @@ for (let i = 0; i < pictureList.length; i++) {
   };
 }
 
-export { pictureList };
+addPictureListOnPage(pictureList);

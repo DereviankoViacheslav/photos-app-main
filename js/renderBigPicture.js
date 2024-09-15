@@ -24,43 +24,81 @@ function createCommentElementList(comments) {
   );
 }
 
-function closeModal(event, modal) {
+export function showModal(modal) {
+  document.body.classList.add("modal-open");
+  modal.classList.remove("hidden");
+}
+
+export function closeModal(modal) {
   document.body.classList.remove("modal-open");
   modal.classList.add("hidden");
 }
 
 export function renderBigPicture(picture) {
-  document.body.classList.add("modal-open");
-
   const bigPictureContainer = document.querySelector(".big-picture");
-  bigPictureContainer.classList.remove("hidden");
-
-  const bigPictureImg = bigPictureContainer.querySelector(
-    ".big-picture__img > img"
-  );
-  bigPictureImg.src = picture.url;
-
-  const socialCaption = bigPictureContainer.querySelector(".social__caption");
-  socialCaption.textContent = picture.decription;
-
-  const likesCount = bigPictureContainer.querySelector(".likes-count");
-  likesCount.textContent = picture.likes;
-
-  const commentsCount = bigPictureContainer.querySelector(".comments-count");
-  commentsCount.textContent = picture.comments.length;
+  showModal(bigPictureContainer);
 
   const commentElementList = createCommentElementList(picture.comments);
   const socialComments = bigPictureContainer.querySelector(".social__comments");
   socialComments.replaceChildren(...commentElementList);
-
-  const buttonPictureCancel =
+  const bigPictureImg = bigPictureContainer.querySelector(
+    ".big-picture__img > img"
+  );
+  bigPictureImg.src = picture.url;
+  const socialCaption = bigPictureContainer.querySelector(".social__caption");
+  socialCaption.textContent = picture.decription;
+  const likesCount = bigPictureContainer.querySelector(".likes-count");
+  likesCount.textContent = picture.likes;
+  const commentsCount = bigPictureContainer.querySelector(".comments-count");
+  commentsCount.textContent = picture.comments.length;
+  const pictureCancelButton =
     bigPictureContainer.querySelector("#picture-cancel");
 
-  buttonPictureCancel.addEventListener("click", (event) =>
-    closeModal(event, bigPictureContainer)
-  );
+  function clickHandler() {
+    closeModal(bigPictureContainer);
+    document.removeEventListener("keydown", escapeHandler);
+    this.removeEventListener("click", clickHandler);
+  }
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeModal(event, bigPictureContainer);
-  });
+  function escapeHandler(event) {
+    if (event.key === "Escape") {
+      closeModal(bigPictureContainer);
+      this.removeEventListener("keydown", escapeHandler);
+      pictureCancelButton.removeEventListener("click", clickHandler);
+    }
+  }
+
+  pictureCancelButton.addEventListener("click", clickHandler);
+  document.addEventListener("keydown", escapeHandler);
 }
+
+// export function renderBigPicture(picture) {
+//   const modal = document.querySelector(".big-picture");
+//   showModal(modal);
+
+//   modal
+//     .querySelector(".social__comments")
+//     .replaceChildren(...createCommentElementList(picture.comments));
+//   modal.querySelector(".big-picture__img > img").src = picture.url;
+//   modal.querySelector(".social__caption").textContent = picture.decription;
+//   modal.querySelector(".likes-count").textContent = picture.likes;
+//   modal.querySelector(".comments-count").textContent = picture.comments.length;
+//   const pictureCancelButton = modal.querySelector("#picture-cancel");
+
+//   function clickHandler() {
+//     closeModal(modal);
+//     document.removeEventListener("keydown", escapeHandler);
+//     this.removeEventListener("click", clickHandler);
+//   }
+
+//   function escapeHandler(event) {
+//     if (event.key === "Escape") {
+//       closeModal(modal);
+//       this.removeEventListener("keydown", escapeHandler);
+//       pictureCancelButton.removeEventListener("click", clickHandler);
+//     }
+//   }
+
+//   pictureCancelButton.addEventListener("click", clickHandler);
+//   document.addEventListener("keydown", escapeHandler);
+// }

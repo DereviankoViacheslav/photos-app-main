@@ -71,34 +71,3 @@ export function renderBigPicture(picture) {
   pictureCancelButton.addEventListener("click", clickHandler);
   document.addEventListener("keydown", escapeHandler);
 }
-
-// export function renderBigPicture(picture) {
-//   const modal = document.querySelector(".big-picture");
-//   showModal(modal);
-
-//   modal
-//     .querySelector(".social__comments")
-//     .replaceChildren(...createCommentElementList(picture.comments));
-//   modal.querySelector(".big-picture__img > img").src = picture.url;
-//   modal.querySelector(".social__caption").textContent = picture.decription;
-//   modal.querySelector(".likes-count").textContent = picture.likes;
-//   modal.querySelector(".comments-count").textContent = picture.comments.length;
-//   const pictureCancelButton = modal.querySelector("#picture-cancel");
-
-//   function clickHandler() {
-//     closeModal(modal);
-//     document.removeEventListener("keydown", escapeHandler);
-//     this.removeEventListener("click", clickHandler);
-//   }
-
-//   function escapeHandler(event) {
-//     if (event.key === "Escape") {
-//       closeModal(modal);
-//       this.removeEventListener("keydown", escapeHandler);
-//       pictureCancelButton.removeEventListener("click", clickHandler);
-//     }
-//   }
-
-//   pictureCancelButton.addEventListener("click", clickHandler);
-//   document.addEventListener("keydown", escapeHandler);
-// }

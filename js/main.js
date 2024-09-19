@@ -2,6 +2,10 @@ import { addPictureListOnPage } from "./renderPreviewPictureList.js";
 import * as test from "./uploadImgHandler.js";
 
 const PICTURE_COUNT = 28;
+const AVATARS_COUNT = 6;
+const MAX_COMMENTS_COUNT = 20;
+const MIN_LIKES_COUNT = 15;
+const MAX_LIKES_COUNT = 200;
 const pictureList = Array(PICTURE_COUNT);
 
 function getRandomIntFromInterval(min, max) {
@@ -33,14 +37,14 @@ function createComment(id) {
   return {
     id,
     name,
-    avatar: `img/avatar-${getRandomIntFromInterval(1, 6)}.svg`, // (1-6)
+    avatar: `img/avatar-${getRandomIntFromInterval(1, AVATARS_COUNT)}.svg`,
     message,
   };
 }
 
 let commentIds = 0;
 for (let i = 0; i < pictureList.length; i++) {
-  const comments = Array(getRandomIntFromInterval(2, 20));
+  const comments = Array(getRandomIntFromInterval(2, MAX_COMMENTS_COUNT));
 
   for (let j = 0; j < comments.length; j++) {
     comments[j] = createComment(commentIds++);
@@ -50,7 +54,7 @@ for (let i = 0; i < pictureList.length; i++) {
     id: i + 1,
     url: `photos/${i + 1}.jpg`,
     decription: `some random decription ${i + 1}`,
-    likes: getRandomIntFromInterval(15, 200), // (15-200)
+    likes: getRandomIntFromInterval(MIN_LIKES_COUNT, MAX_LIKES_COUNT),
     comments,
   };
 }

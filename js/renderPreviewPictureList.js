@@ -1,14 +1,12 @@
 import { renderBigPicture } from "./renderBigPicture.js";
 
-function openBigPictureModal(event, picture) {
-  event.preventDefault();
-  renderBigPicture(picture);
-}
-
 function createClonePictureElement(picture) {
   const clonePictureTemplateContent = document
     .querySelector("template#picture")
     .content.cloneNode(true);
+
+  clonePictureTemplateContent.querySelector("a.picture").dataset.pictureId =
+    picture.id;
 
   const pictureTemplate =
     clonePictureTemplateContent.querySelector(".picture__img");
@@ -22,11 +20,6 @@ function createClonePictureElement(picture) {
     clonePictureTemplateContent.querySelector(".picture__comments");
   pictureComments.textContent = picture.comments.length;
 
-  const pictureElement = clonePictureTemplateContent.querySelector("a.picture");
-  pictureElement.addEventListener("click", (event) =>
-    openBigPictureModal(event, picture)
-  );
-
   return clonePictureTemplateContent;
 }
 
@@ -38,5 +31,14 @@ export function addPictureListOnPage(pictureList) {
   const pictureElementList = createPictureElementList(pictureList);
 
   const pictures = document.querySelector(".pictures");
+  pictures.addEventListener("click", (event) => {
+    const target = event.target.closest("a.picture");
+    if (!target) return;
+    const picture = pictureList.find(
+      (picture) => `${picture.id}` === target.dataset.pictureId
+    );
+    event.preventDefault();
+    renderBigPicture(picture);
+  });
   pictures.append(...pictureElementList);
 }

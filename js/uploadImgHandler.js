@@ -53,40 +53,122 @@ function changeEffectHandler(event) {
 
 uploadSelectImageForm.addEventListener("change", changeEffectHandler);
 
-function changeHashtagsHandler(event) {
-  const hashtagList = event.target.value
-    .split("#")
-    .filter((hashTag) => hashTag.trim().length > 0)
-    .map((hashTag) => "#" + hashTag.replace(/\W|_/g, ""));
+function hashTagValidation(hashTag) {
+  const errors = [];
+  const validationRegExp = /#[0-9A-Za-z]+$/g;
+  if (!validationRegExp.test(hashTag)) {
+    errors.push(`Хэштег должен начинаться с "#",
+        содержать только буквы и цифры,
+        минимум один символ`);
+  }
+  const MAX_HASH_TAG_LENGTH = 20;
+  if (hashTag.length > MAX_HASH_TAG_LENGTH) {
+    errors.push('Максимальная длина хэштега 20 символов, включая "#"');
+  }
 
-  event.target.value = hashtagList.join(" ");
+  return errors.length ? errors : null;
 }
 
-hashtagsInput.addEventListener("change", changeHashtagsHandler);
+function hashTagListValidation(hashTagList) {
+  const errors = [];
+  if (hashTagList.length > 5) {
+    errors.push("Максимум 5 хэштегов");
+    return errors;
+  }
+  for (let i = 0; i < hashTagList.length; i++) {
+    const result = hashTagValidation(hashTagList[i]);
+    if (result) {
+      errors.push(...result);
+      return errors;
+    }
+  }
+  const duplicate = hashTagList
+    .map((hashTag) => hashTag.toLowerCase())
+    .find(
+      (hashTag, index, hashTagList) => hashTagList.indexOf(hashTag) !== index
+    );
+
+  if (duplicate) {
+    errors.push(`Хэштеги не должны повторяться
+        Регистр не имеет значения.`);
+    return errors;
+  }
+  return null;
+}
+
+function inputHashtagsHandler(event) {
+  event.currentTarget.setCustomValidity("");
+  event.target.style.outlineColor = "initial";
+}
+
+async function submitForm(event) {
+  event.preventDefault();
+
+  const formData = new FormData(uploadSelectImageForm);
+  const hashTagsStr = formData.get("hashtagsInput");
+
+  if (hashTagsStr) {
+    const hashTagList = hashTagsStr.split(/\s/);
+    const errors = hashTagListValidation(hashTagList);
+    if (errors) {
+      hashtagsInput.setCustomValidity(errors[0]);
+      hashtagsInput.style.outlineColor = "red";
+      event.currentTarget.reportValidity();
+      return;
+    }
+  }
+  event.currentTarget.reset();
+  closeModal(editImgElement);
+  //   console.log("formData = ", formData);
+  //   console.log(
+  //     "formData.get(uploadFileInput) = ",
+  //     formData.get("uploadFileInput")
+  //   );
+  //   console.log(
+  //     "formData.get(scaleControlInput) = ",
+  //     formData.get("scaleControlInput")
+  //   );
+  //   console.log("formData.get(effect) = ", formData.get("effect"));
+  //   console.log("formData.get(hashtagsInput) = ", formData.get("hashtagsInput"));
+  //   console.log(
+  //     "formData.get(descriptionTextarea) = ",
+  //     formData.get("descriptionTextarea")
+  //   );
+
+  //   const response = await fetch("", {
+  //     method: "POST",
+  //     body: formData,
+  //   });
+
+  //   const result = await response.json();
+}
+
+uploadSelectImageForm.addEventListener("submit", submitForm);
+
+hashtagsInput.addEventListener("input", inputHashtagsHandler);
 hashtagsInput.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     event.stopPropagation();
   }
 });
-
-function clickCancelHandler(event) {
-  closeModal(editImgElement);
-  document.removeEventListener("keydown", keyCancelHandler);
-  this.removeEventListener("click", clickCancelHandler);
-  event.target.value = "";
-}
-
-function keyCancelHandler(event) {
+descriptionTextarea.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
-    closeModal(editImgElement);
-    this.removeEventListener("keydown", keyCancelHandler);
-    uploadCancelButton.removeEventListener("click", clickCancelHandler);
-    event.target.value = "";
+    event.stopPropagation();
   }
+});
+
+function cancel() {
+  closeModal(editImgElement);
+  uploadFileInput.value = "";
 }
+
+uploadCancelButton.addEventListener("click", cancel);
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    cancel;
+  }
+});
 
 uploadFileInput.addEventListener("change", (event) => {
   showModal(editImgElement);
-  uploadCancelButton.addEventListener("click", clickCancelHandler);
-  document.addEventListener("keydown", keyCancelHandler);
 });

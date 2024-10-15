@@ -1,0 +1,9 @@
+.noUi-origin {
+  width: 96%;
+  margin: 0 9px;
+}
+
+.noUi-handle {
+  border-radius: 50%;
+  background-color: coral;
+}

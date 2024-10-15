@@ -15,13 +15,44 @@ const {
   effect: effectRadioList,
   hashtagsInput,
   descriptionTextarea,
+  effectLevelInput,
 } = uploadSelectImageForm;
 
 const imgUploadPreview = editImgElement.querySelector(".img-upload__preview");
+const slider = editImgElement.querySelector("#slider");
+
+noUiSlider.create(slider, {
+  start: 0,
+  step: 0.1,
+  connect: "lower",
+  range: {
+    min: 0,
+    max: 1,
+  },
+});
+
+slider.noUiSlider.disable();
+
+slider.noUiSlider.on("update", function (values, handle) {
+  const effectLevel = values[handle];
+  let effect = effectRadioList.value;
+  const effects = {
+    chrome: `grayscale(${effectLevel})`,
+    sepia: `sepia(${effectLevel})`,
+    marvin: `invert(${effectLevel}%)`,
+    phobos: `blur(${effectLevel}px)`,
+    heat: `brightness(${effectLevel})`,
+  };
+  imgUploadPreview.style.WebkitFilter = effects[effect];
+  imgUploadPreview.style.filter = effects[effect];
+  effectLevelInput.value = effectLevel;
+});
 
 scaleControlSmallerButton.addEventListener("click", function handler(event) {
   const currentValue = Number.parseInt(scaleControlInput.value);
-  const newValue = currentValue > 25 ? currentValue - 25 : currentValue;
+  const SCALE_STEP = 25;
+  const newValue =
+    currentValue > SCALE_STEP ? currentValue - SCALE_STEP : currentValue;
   scaleControlInput.value = `${newValue}%`;
   imgUploadPreview.style.transform = `scale(${newValue / 100})`;
 });
@@ -38,17 +69,40 @@ function changeEffectHandler(event) {
   if (type !== "radio" && name !== "effect") {
     return;
   }
+  slider.noUiSlider.reset();
   const effectClassName = [...imgUploadPreview.classList].find((className) =>
     className.includes("effects__preview--")
   );
   if (!effectClassName) {
     imgUploadPreview.classList.add(`effects__preview--${value}`);
+  } else {
+    imgUploadPreview.classList.replace(
+      effectClassName,
+      `effects__preview--${value}`
+    );
+  }
+  if (value === "none") {
+    slider.noUiSlider.disable();
     return;
   }
-  imgUploadPreview.classList.replace(
-    effectClassName,
-    `effects__preview--${value}`
-  );
+  let start = 1;
+  let step = 0.1;
+  let min = 0;
+  let max = 1;
+
+  switch (value) {
+    case "marvin":
+      start = max = 100;
+      step = 1;
+      break;
+    case "phobos":
+    case "heat":
+      start = max = 3;
+      min = value === "heat" ? 1 : 0;
+      break;
+  }
+  slider.noUiSlider.enable();
+  slider.noUiSlider.updateOptions({ start, step, range: { min, max } });
 }
 
 uploadSelectImageForm.addEventListener("change", changeEffectHandler);
@@ -117,30 +171,18 @@ async function submitForm(event) {
       return;
     }
   }
+  const data = {
+    uploadFileInput: formData.get("uploadFileInput"),
+    scaleControlInput: formData.get("scaleControlInput"),
+    effectLevelInput: formData.get("effectLevelInput"),
+    effect: formData.get("effect"),
+    hashtagsInput: formData.get("hashtagsInput"),
+    descriptionTextarea: formData.get("descriptionTextarea"),
+  };
+  console.log("data:", data);
+  console.dir(JSON.stringify(data, null, 2));
+  cancel();
   event.currentTarget.reset();
-  closeModal(editImgElement);
-  //   console.log("formData = ", formData);
-  //   console.log(
-  //     "formData.get(uploadFileInput) = ",
-  //     formData.get("uploadFileInput")
-  //   );
-  //   console.log(
-  //     "formData.get(scaleControlInput) = ",
-  //     formData.get("scaleControlInput")
-  //   );
-  //   console.log("formData.get(effect) = ", formData.get("effect"));
-  //   console.log("formData.get(hashtagsInput) = ", formData.get("hashtagsInput"));
-  //   console.log(
-  //     "formData.get(descriptionTextarea) = ",
-  //     formData.get("descriptionTextarea")
-  //   );
-
-  //   const response = await fetch("", {
-  //     method: "POST",
-  //     body: formData,
-  //   });
-
-  //   const result = await response.json();
 }
 
 uploadSelectImageForm.addEventListener("submit", submitForm);
@@ -159,16 +201,30 @@ descriptionTextarea.addEventListener("keydown", (event) => {
 
 function cancel() {
   closeModal(editImgElement);
-  uploadFileInput.value = "";
+  uploadSelectImageForm.reset();
+  slider.noUiSlider.reset();
+  slider.noUiSlider.disable();
+  const effectClassName = [...imgUploadPreview.classList].find((className) =>
+    className.includes("effects__preview--")
+  );
+  if (effectClassName) {
+    imgUploadPreview.classList.replace(
+      effectClassName,
+      "effects__preview--none"
+    );
+  }
+  imgUploadPreview.style.transform = "none";
+  imgUploadPreview.style.WebkitFilter = "none";
+  imgUploadPreview.style.filter = "none";
 }
 
 uploadCancelButton.addEventListener("click", cancel);
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
-    cancel;
+    cancel();
   }
 });
 
-uploadFileInput.addEventListener("change", (event) => {
+uploadFileInput.addEventListener("change", () => {
   showModal(editImgElement);
 });

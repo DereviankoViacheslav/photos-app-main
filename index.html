@@ -7,8 +7,10 @@
   <link rel="stylesheet" href="css/normalize.css"> -->
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/nouislider.css">
+  <link rel="stylesheet" href="css/customstylenouislider.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <script type="module" src="./node_modules/nouislider/dist/nouislider.min.js"></script>
   <title>COSMOGRAM</title>
 </head>
 
@@ -60,7 +62,7 @@
 
                   <!-- Зміна глибини ефекту, що накладається на зображення-->
                   <fieldset class="img-upload__effect-level  effect-level">
-                    <input class="effect-level__value" type="number" step="any" name="effect-level" value="">
+                    <input class="effect-level__value" type="number" step="any" name="effectLevelInput" value="">
                     <div class="effect-level__slider">
                       <div id="slider"></div>
                     </div>
@@ -167,7 +169,7 @@
           </ul>
 
           <!-- Кнопка для завантаження нової порції коментарів -->
-          <button type="button" class="social__comments-loader  comments-loader">Завантажити ще</button>
+          <button type="button" class="social__comments-loader  comments-loader hidden">Завантажити ще</button>
 
           <!-- Форма для відправки коментаря -->
           <div class="social__footer">
@@ -237,7 +239,7 @@
 
   <!-- Підключення js-->
   <!-- <script type="module" src="./nouislider/nouislider.js"></script> -->
-  <script type="module" src="./node_modules/nouislider/dist/nouislider.min.js"></script>
+  <!-- <script type="module" src="./node_modules/nouislider/dist/nouislider.min.js"></script> -->
   <script type="module" src="./js/main.js"></script>
 </body>
 </html>

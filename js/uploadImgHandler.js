@@ -1,4 +1,5 @@
 import { showModal, closeModal } from "./renderBigPicture.js";
+import { SERVER_URL } from "./constants.js";
 
 const uploadSelectImageForm = document.forms.uploadImageForm;
 
@@ -172,15 +173,29 @@ async function submitForm(event) {
     }
   }
   const data = {
-    uploadFileInput: formData.get("uploadFileInput"),
-    scaleControlInput: formData.get("scaleControlInput"),
-    effectLevelInput: formData.get("effectLevelInput"),
+    uploadFile: formData.get("uploadFileInput"),
+    scaleControl: formData.get("scaleControlInput"),
+    effectLevel: formData.get("effectLevelInput"),
     effect: formData.get("effect"),
-    hashtagsInput: formData.get("hashtagsInput"),
-    descriptionTextarea: formData.get("descriptionTextarea"),
+    hashtags: formData.get("hashtagsInput"),
+    description: formData.get("descriptionTextarea"),
   };
-  console.log("data:", data);
-  console.dir(JSON.stringify(data, null, 2));
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+  const requestOptions = {
+    method: "POST",
+    body: "",
+    headers,
+  };
+  const reader = new FileReader();
+  reader.onload = async () => {
+    data.uploadFile = reader.result;
+    requestOptions.body = JSON.stringify(data);
+    const response = await fetch(SERVER_URL, requestOptions);
+    console.log("response==>>", await response.json());
+  };
+  reader.readAsDataURL(data.uploadFile);
+
   cancel();
   event.currentTarget.reset();
 }

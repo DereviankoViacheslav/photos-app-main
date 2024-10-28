@@ -103,6 +103,6 @@ export function renderBigPicture(picture) {
   showModal(fullImgModal);
   renderComments(comments);
   bigPictureImg.src = picture.url;
-  socialCaption.textContent = picture.decription;
+  socialCaption.textContent = picture.description;
   likesCount.textContent = picture.likes;
 }

@@ -2,7 +2,7 @@
   "name": "photos-app",
   "version": "1.0.0",
   "private": true,
-  "description": "Особистий проект",
+  "description": "Pet project",
   "repository": {
     "type": "git"
   },
@@ -23,11 +23,9 @@
   "main": "index.js",
   "keywords": [
     "photos",
-    "app",
-    "hilel",
-    "study"
+    "app"
   ],
-  "author": "RybakV",
+  "author": "",
   "dependencies": {
     "nouislider": "^15.7.0"
   }
